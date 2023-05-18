@@ -16,6 +16,8 @@ const options = {
 	}
 };
 
+
+
 const mostrarVideo = (resultado) => {
 
     title.innerHTML = resultado.video.title
@@ -60,10 +62,9 @@ const buscarDescripcion = async(resultado) => {
 }
 
 const mostrarRelacionados = (resultado) => {
-    console.log(imagenesCarrusel)
     imagenesCarrusel.forEach((elemento,index) => {
         elemento.src = resultado.contents[index].video.thumbnails[1].url
-        console.log(resultado.contents[index].video.thumbnails[1].url)
+        elemento.id =  resultado.contents[index].video.videoId
     })
 }
 
@@ -77,8 +78,14 @@ const buscarRelacionados = async(resultado) => {
         console.error(error);
     }
 }
-const buscarVideo = async() =>{
-    let url = `https://youtube138.p.rapidapi.com/search/?q=${buscador.value}&hl=en&gl=US` ;
+const buscarVideo = async(e) =>{
+    console.log(e.target.nodeName);
+    if(e.target.nodeName === "BUTTON"){
+        url = `https://youtube138.p.rapidapi.com/search/?q=${buscador.value}&hl=en&gl=US` ; 
+    }else{
+        
+        url = `https://youtube138.p.rapidapi.com/search/?q=${e.target.id}&hl=en&gl=US` ;
+    }
     try {
         let response = await fetch(url, options);
         let result = await response.json();
@@ -97,7 +104,8 @@ const buscarVideo = async() =>{
     }
 }
 
-
 btnBuscador.addEventListener("click",buscarVideo)
 
-
+imagenesCarrusel.forEach(element => {
+    element.addEventListener("click", buscarVideo )
+})
